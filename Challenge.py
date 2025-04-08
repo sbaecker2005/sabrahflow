@@ -71,7 +71,8 @@ def ver_fila():
         print("\nA fila de espera está vazia.")
     else:
         print("\nFila de Espera:")
-        for i, paciente in enumerate(pacientes, start=1):
+        fila_priorizada = sorted(pacientes, key=lambda p: ["Grave", "Moderado", "Leve"].index(p["gravidade"]))
+        for i, paciente in enumerate(fila_priorizada, start=1):
             print(f"{i}. {paciente['nome']} - Gravidade: {paciente['gravidade']}")
 
 def iniciar_atendimento():
@@ -79,6 +80,7 @@ def iniciar_atendimento():
         print("\nNão há pacientes na fila de espera.")
         return
 
+    pacientes.sort(key=lambda p: ["Grave", "Moderado", "Leve"].index(p["gravidade"]))
     paciente = pacientes.pop(0)
     print(f"\nAtendendo {paciente['nome']}...")
     nome_medico = input("Nome do médico: ")
