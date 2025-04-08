@@ -58,7 +58,7 @@ def cadastrar_paciente():
     print(f"Paciente {nome} cadastrado com gravidade {gravidade}.")
 
 def classificar_gravidade(sintomas, tempo_sintomas):
-    palavras_chave = ["febre", "dor", "falta de ar"]
+    palavras_chave = ["febre", "dor no corpo", "cansaço", "falta de ar", "vômito", "diarreia"]
     if any(palavra in sintomas.lower() for palavra in palavras_chave) or tempo_sintomas > 7:
         return "Grave"
     elif tempo_sintomas > 3:
@@ -92,6 +92,31 @@ def iniciar_atendimento():
         "resultado": resultado
     }
     historico.append(registro)
+
+    try:
+        with open("diagnosticos.json", "r") as arquivo:
+            diagnosticos = json.load(arquivo)
+    except FileNotFoundError:
+        diagnosticos = []
+
+    diagnosticos.append({
+        "nome": paciente["nome"],
+        "idade": paciente["idade"],
+        "sintomas": paciente["sintomas"],
+        "tempo_sintomas": paciente["tempo_sintomas"],
+        "gravidade": paciente["gravidade"],
+        "medico": nome_medico,
+        "observacoes": observacoes,
+        "resultado": resultado
+    })
+
+    try:
+        with open("diagnosticos.json", "w") as arquivo:
+            json.dump(diagnosticos, arquivo, indent=4)
+        print("Histórico do paciente salvo em diagnosticos.json.")
+    except Exception as e:
+        print(f"Erro ao salvar o histórico do paciente: {e}")
+
     print(f"Atendimento de {paciente['nome']} concluído.")
 
 def ver_historico():
